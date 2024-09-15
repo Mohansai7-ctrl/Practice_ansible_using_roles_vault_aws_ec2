@@ -1,4 +1,4 @@
-app_location: "{{ /app }}"
+app_location: /app
 component: backend
 login_user: root
 login_host: "{{ mysql.mohansai.online }}"
