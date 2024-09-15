@@ -2,7 +2,7 @@
 - name: creating ec2_instances and route_53 infra
   hosts: local
   connection: local
-  become: yes
+  
   vars:
   - sg_id: "sg-0d91387712ba38962"
   - subnet_id: "subnet-021ec0b6274b5e769"
