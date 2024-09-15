@@ -42,7 +42,7 @@
 
   #creating route53 records of private ip's
   - name: creating route53 private ip's
-    amazon.aws.route53:
+    amazon.aws_route53:
       state: present
       zone: "{{ zone }}"
       record: "{{ item.instances[0].private_ip_address }}"
