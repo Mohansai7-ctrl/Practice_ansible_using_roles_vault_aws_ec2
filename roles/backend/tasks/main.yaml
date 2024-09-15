@@ -29,7 +29,7 @@
     executable: pip3.9
 
 - name: importing schema backend.sql the mysql_db
-  amazon.mysql.mysql_db:
+  community.mysql.mysql_db:
     login_user: "{{ login_user }}"
     login_host: "{{ login_host }}"
     login_password: "{{ login_password }}"
