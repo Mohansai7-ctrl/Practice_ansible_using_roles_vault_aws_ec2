@@ -3,9 +3,7 @@
     name: nginx
     state: present
 
-- name: creating expense user
-  ansible.builtin.user:
-    name: expense
+
 
 
 - name: importing from common role
@@ -18,7 +16,7 @@
   ansible.builtin.template:
     src: expense.conf.j2
     dest: /etc/nginx/default.d/expense.conf
-    
+
   notify:
   - restart-nginx
 

@@ -7,13 +7,27 @@
 
 - name: installing the nodjes
   ansible.builtin.package:
-    name: nodejs
+    name: "{{ item }}"
     state: installed
+  loop:
+  - nodejs
+  - mysql
+
+
+- name: creating expense user
+  ansible.builtin.user:
+    name: expense
 
 - name: importing from common role
   ansible.builtin.import_role:
     name: common
     tasks_from: app-pre-req
+
+
+- name: installing build tool npm
+  ansible.builtin.command: npm install
+  args:
+    chdir: /app
 
 - name: placing the backend.service in required path
   ansible.builtin.template:
