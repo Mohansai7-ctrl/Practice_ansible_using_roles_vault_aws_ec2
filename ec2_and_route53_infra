@@ -1,7 +1,7 @@
 #creating ec2_instances
 - name: creating ec2_instances and route_53 infra
   hosts: local
-  connections: local
+  connection: local
   become: yes
   vars:
   - sg_id: "sg-0d91387712ba38962"
