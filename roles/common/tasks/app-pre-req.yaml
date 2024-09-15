@@ -7,7 +7,7 @@
 - name: creating the files/dir again
   ansible.builtin.file:
     path: "{{ app_location }}"
-    state: present
+    state: directory
     
 - name: donwloading the developer content
     ansible.builtin.unarchive:
