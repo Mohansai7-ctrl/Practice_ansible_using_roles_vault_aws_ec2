@@ -1,0 +1,74 @@
+#creating ec2_instances
+- name: creating ec2_instances and route_53 infra
+  hosts: local
+  connections: local
+  become: yes
+  vars:
+  - sg_id: ""
+  - subnet_id: ""
+  - ami_id: ""
+  - zone : "mohansai.online"
+  instances:
+  - mysql
+  - backend
+  - frontend
+
+
+  tasks:
+
+  - name: installing pre required packages
+    ansible.builtin.pip:
+      name:
+      - boto3
+      - botocore
+      executable: pip3.9
+
+
+  - name: creating ec2_instance
+    amazon.aws.ec2_instance:
+      name: "{{ item }}"
+      instance_type: "t3.micro"
+      sg_id: "{{ sg_id }}"
+      vpc_subnet_id: "{{ subnet_id }}"
+      image_id: "{{ ami_id }}"
+    loop: "{{ instances }}"
+    register: ec2_instances
+
+
+  - name: getting and printing the output of above created ec2_instances
+    ansible.builtin.debug:
+      msg: "{{ ec2_instances }}"
+
+
+  #creating route53 records of private ip's
+  - name: creating route53 private ip's
+    amazon.aws.route53:
+      state: present
+      zone = "{{ zone }}"
+      record: "{{ item.instances[0].private_ip_address }}"
+      value: "{{ item.instances[0] }}.{{ zone }}"
+      type: A
+      ttl: 1
+      wait: true
+      overwrite: true
+    loop: "{{ ec2_instances.results }}"
+
+
+
+
+- name: creating public_ip of frontend server
+  amazon.aws.route53:
+    state: present
+    zone: "{{ zone }}"
+    name: "{{ item }}"
+    records: "{{ zone }}"
+    value: "{{ item.instances[0].public_ip_address }}"
+    type: A
+    ttl: 1
+    wait: true
+    overwrite: true
+  loop: "{{ ec2_instances.results }}"
+  when: item.item == "frontend"
+
+
+  

@@ -1,0 +1,33 @@
+- name: Downloading the pre reuired packages of python
+  ansible.builtin.pip:
+    name:
+    - PyMySQL
+    - cryptograply
+    executable: pip3.9
+
+
+
+- name: configuring the mysql server by installing it.
+  ansible.builtin.package:
+    name: "mysql-server"
+    state: installed
+  
+- name: starting and enabling the mysqld service
+  ansible.builtin.service:
+    name: mysqld
+    state: started
+    enabled: yes
+
+
+- name: checking whether connect to mysql_db or not
+  amazon.mysql.mysql_info:
+    login_user: "{{ login_user }}"
+    login_password: "{{ login_password }}"
+    login_host: "{{ mysql.mohansai.online }}"
+  ignore_errors: true
+  register: mysql_info
+
+
+- name: Setting up the password for root user for mysql_db
+  ansible.builtin.command: mysql_secure_installation --set-root-pass ExpenseApp@1
+  when: mysql_info.failed is true
