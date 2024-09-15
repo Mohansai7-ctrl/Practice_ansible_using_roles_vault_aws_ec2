@@ -42,12 +42,12 @@
 
   #creating route53 records of private ip's
   - name: creating route53 private ip's
-    amazon.aws_route53:
+    amazon.aws.route53:
       state: present
       zone: "{{ zone }}"
       record: "{{ item.instances[0].private_ip_address }}"
       value: "{{ item.instances[0] }}.{{ zone }}"
-      type: A
+      type: "A"
       ttl: 1
       wait: true
       overwrite: true
@@ -61,14 +61,41 @@
     state: present
     zone: "{{ zone }}"
     name: "{{ item }}"
-    records: "{{ zone }}"
+    record: "{{ zone }}"
     value: "{{ item.instances[0].public_ip_address }}"
-    type: A
+    type: "A"
     ttl: 1
     wait: true
     overwrite: true
   loop: "{{ ec2_instances.results }}"
   when: item.item == "frontend"
+
+
+  #   - name: creating route 53 records of private ip addresses
+  #   amazon.aws.route53:
+  #     state: present
+  #     zone: "{{ zone }}"
+  #     record: "{{ item.item }}.{{ zone }}"
+  #     value: "{{ item.instances[0].private_ip_address }}"
+  #     type: A
+  #     ttl: 1
+  #     wait: true
+  #     overwrite: true
+  #   loop: "{{ ec2_instances.results }}"
+
+
+  # - name: creating route 53 records of public ip address of frontend
+  #   amazon.aws.route53:
+  #     state: present
+  #     zone: "{{ zone }}"
+  #     record: "{{ zone }}"
+  #     value: "{{ item.instances[0].public_ip_address }}"
+  #     type: A
+  #     ttl: 1
+  #     wait: true
+  #     overwrite: true
+  #   loop: "{{ ec2_instances.results }}"
+  #   when: item.item == "frontend"
 
 
   
